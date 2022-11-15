@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) API para simulação de um fluxo de atendimento, usando banco de dados MySQL.
 
 ## Installation
 
@@ -32,6 +32,24 @@
 $ npm install
 ```
 
+## Variaveis de Ambiente
+
+```bash
+  DB_HOST => Host do banco de dados
+  DB_PORT => Porta do banco de dados
+  DB_USER => Usuário do banco de dados
+  DB_PASSWORD => Senha do usuário do banco de dados
+  DB_NAME => Nome do banco
+  JWT_SECRET => Segredo para criação do token de autenticação
+```
+
+## Migrations
+
+```bash
+  npm run migration:up
+```
+
+Cria as tabelas no banco MySQL
 ## Running the app
 
 ```bash
@@ -45,29 +63,56 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Endpoints
 
 ```bash
-# unit tests
-$ npm run test
+  POST [BASEURL]/users
+  body {
+    "name": "Cicrano de Souza",
+    "login": "cicrano.souza",
+    "password": "1234",
+    "role": "PROFESSIONAL"
+  }
+ ```
+  
+Cria a conta do usuário, que poderá possuir role PROFESSIONAL, caso seja um profissional, ou CLIENT, caso seja um cliente.
 
-# e2e tests
-$ npm run test:e2e
+```bash
+  PATCH [BASEURL]/users
+  body {
+    "login": "cicrano.souza",
+    "password": "1234",
+  }
+```
+  
+Realiza o login do usuário no sistema. Retorna um token de autenticação para o usuário.
 
-# test coverage
-$ npm run test:cov
+```bash
+  POST [BASEURL]/services
+  headers {
+    Authorization: token
+  }
+  body {
+    "name": "aulal de violao",
+    "amount": 300,
+    "commission": 0.12
+  }
 ```
 
-## Support
+Cria a solicitação de serviço realizada por um usuário do tipo CLIENT. O token de autenticação obtido no login deve ser repassado no campo Authorization do headers.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+  PATCH [BASEURL]/services
+  headers {
+    Authorization: token
+  }
+```
+  
+Realiza, através de um usuário PROFESSIONAL, o atendimento do pedido do usuário. O token de autenticação obtido no login deve ser repassado no campo Authorization do headers. Caso a role do usuário nao seja PROFESSIONAL, retornará erro.
 
-## Stay in touch
+```bash
+  GET [BASEURL]/services
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+Retorna lista de soliciações de serviço.
+  
