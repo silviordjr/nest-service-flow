@@ -1,14 +1,12 @@
-import { User } from "src/users/entities/user.entity";
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, CreateDateColumn, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn} from "typeorm";
 
 @Entity({name: 'services'})
 export class Service {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @OneToOne(type => User, service => Service)
-    @JoinColumn({name: 'user_id'})
-    user: User
+    @Column()
+    client_id: string
 
     @Column()
     name: string;
