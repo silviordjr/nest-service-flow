@@ -18,8 +18,15 @@ export class UsersController {
     };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Patch()
+  @UseFilters(HttpExceptionFilter)
+  async update(@Body() updateUserDto: UpdateUserDto) {
+    try {
+      const token = await this.usersService.update(updateUserDto);
+
+      return token
+    } catch (error) {
+      throw new HttpException(error.message, error.status)
+    }
   }
 }
